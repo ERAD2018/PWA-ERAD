@@ -17,7 +17,7 @@
       <ion-item-sliding *ngFor="let item of listaProgramacao">
         <button ion-item  (click)="goToDetalhes(item)">
           <h3>{{item.gsx$nome.$t}}</h3>
-          <p>{{item.gsx$horainicio.$t + " - " + item.gsx$horafim.$t}}</p>
+          <p>{{item.gsx$horainicio.$t}} - {{item.gsx$horafim.$t}}<span *ngIf='item.gsx$local.$t != ""'>: {{item.gsx$local.$t}}</span></p>
         </button>
       </ion-item-sliding>
     </ion-item-group>
