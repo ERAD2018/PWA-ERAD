@@ -8,6 +8,7 @@ import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ProgramacaoPage } from './../pages/programacao/programacao';
+import { DetalhePage } from './../pages/detalhe/detalhe';
 
 import { SheetProvider } from '../providers/sheet/sheet';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,7 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
     ContactPage,
     HomePage,
     TabsPage,
-    ProgramacaoPage
+    ProgramacaoPage,
+    DetalhePage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import { HttpClientModule } from '@angular/common/http';
     ContactPage,
     HomePage,
     TabsPage,
-    ProgramacaoPage
+    ProgramacaoPage,
+    DetalhePage
   ],
   providers: [
     //StatusBar,

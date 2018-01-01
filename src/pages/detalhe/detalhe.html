@@ -1,0 +1,25 @@
+<!--
+  Generated template for the DetalhePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{detalhes.gsx$nome.$t}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div>
+    <h1>{{detalhes.gsx$nome.$t}}</h1>
+    <h4>Local: {{detalhes.gsx$local.$t}}</h4>
+    <h4>Horário: {{detalhes.gsx$horainicio.$t}} - {{detalhes.gsx$horafim.$t}}</h4>
+    <h4 *ngIf='detalhes.gsx$palestrantesautores.$t != ""'>Palestrante: {{detalhes.gsx$palestrantesautores.$t}}</h4>
+    <p>{{detalhes.gsx$descricao.$t}}</p>
+    <p *ngIf='detalhes.gsx$palestrantesautores.$t != ""'>Anexo: {{detalhes.gsx$arquivo.$t}}</p>
+  </div>
+</ion-content>
