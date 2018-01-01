@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { SheetProvider } from '../../providers/sheet/sheet';
+import { DetalhePage } from './../detalhe/detalhe';
 
 /**
  * Generated class for the ProgramacaoPage page.
@@ -16,6 +17,7 @@ import { SheetProvider } from '../../providers/sheet/sheet';
 export class ProgramacaoPage {
   
   listaProgramacao: any;
+  listaBkp: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sheetProvider: SheetProvider) {
   }
@@ -34,6 +36,7 @@ export class ProgramacaoPage {
       console.log(data);
       var dataResponse = <SheetResponse>data;
       this.listaProgramacao = dataResponse.feed['entry'];
+      this.listaBkp = this.listaProgramacao;
       console.log(this.listaProgramacao);
     },
       err => {
@@ -43,7 +46,24 @@ export class ProgramacaoPage {
     );
   }
 
+  getItems(ev: any){
+    this.listaProgramacao = this.listaBkp;
+    let search = ev.target.value;
+    if(search && search.trim() != ''){
+      this.listaProgramacao = this.listaProgramacao.filter((item) => {
+        return(item.gsx$nome.$t.toLowerCase().indexOf(search.toLowerCase()) > -1);
+      })
+    }
+  }
+
+  goToDetalhes(item: any){
+    console.log(item);
+    this.navCtrl.push(DetalhePage, {detalhes: item});
+  }
+
 }
+
+  
 
 interface SheetResponse {
   feed: string;

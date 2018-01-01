@@ -11,10 +11,11 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
   <ion-list>
     <ion-item-group>
-      <ion-item-sliding>
-        <button ion-item *ngFor="let item of listaProgramacao">
+      <ion-item-sliding *ngFor="let item of listaProgramacao">
+        <button ion-item  (click)="goToDetalhes(item)">
           <h3>{{item.gsx$nome.$t}}</h3>
           <p>{{item.gsx$horainicio.$t + " - " + item.gsx$horafim.$t}}</p>
         </button>
