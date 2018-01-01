@@ -5,17 +5,17 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Programação</ion-title>
+    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
   <ion-list>
     <ion-item-group>
-      <ion-item-sliding *ngFor="let item of listaProgramacao">
-        <button ion-item  (click)="goToDetalhes(item)">
+      <ion-item-sliding>
+        <button ion-item *ngFor="let item of listaProgramacao" (click)="goToDetalhes(item)">
           <h3>{{item.gsx$nome.$t}}</h3>
           <p>{{item.gsx$horainicio.$t}} - {{item.gsx$horafim.$t}}<span *ngIf='item.gsx$local.$t != ""'>: {{item.gsx$local.$t}}</span></p>
         </button>
