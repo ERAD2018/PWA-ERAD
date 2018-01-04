@@ -19,7 +19,7 @@
     <h4>Local: {{detalhes.gsx$local.$t}}</h4>
     <h4>Horário: {{detalhes.gsx$horainicio.$t}} - {{detalhes.gsx$horafim.$t}}</h4>
     <h4 *ngIf='detalhes.gsx$palestrantesautores.$t != ""'>Palestrante: {{detalhes.gsx$palestrantesautores.$t}}</h4>
-    <p>{{detalhes.gsx$descricao.$t}}</p>
-    <p *ngIf='detalhes.gsx$palestrantesautores.$t != ""'>Anexo: {{detalhes.gsx$arquivo.$t}}</p>
+    <h4>{{detalhes.gsx$descricao.$t}}</h4>
+    <h4 *ngIf='detalhes.gsx$arquivo.$t != ""'>Anexo: {{detalhes.gsx$arquivo.$t}}</h4>
   </div>
 </ion-content>
