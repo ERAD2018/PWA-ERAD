@@ -8,22 +8,11 @@
   <ion-navbar color="primary">
     <!--ion-title>Programação</ion-title-->
     <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-    <div ion-row>
-        <ion-item col-md-5>
-            <ion-label>Data</ion-label>
-            <ion-select interface="popover" [(ngModel)]="selectedData" (ionChange)="filterProgramacao($event)">
-              <ion-option selected>Todos</ion-option>
-              <ion-option *ngFor="let data of selectDataOptions">{{data}}</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item push-md-2 col-md-5>
-            <ion-label>Local</ion-label>
-            <ion-select interface="popover" [(ngModel)]="selectedLocal" (ionChange)="filterProgramacao($event)">
-                <ion-option selected>Todos</ion-option>
-                <ion-option *ngFor="let local of selectLocalOptions">{{local}}</ion-option>
-          </ion-select>
-        </ion-item>
-      </div>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="showFilter()">
+        <ion-icon md="md-options"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -33,7 +22,10 @@
       <ion-item-sliding>
         <button ion-item *ngFor="let item of listaProgramacao" (click)="goToDetalhes(item)">
           <h3>{{item.gsx$nome.$t}}</h3>
-          <p>{{item.gsx$data.$t}} &mdash; {{item.gsx$horainicio.$t}} - {{item.gsx$horafim.$t}}<span *ngIf='item.gsx$local.$t != ""'> &mdash; {{item.gsx$local.$t}}</span></p>
+          <p>{{item.gsx$data.$t}} &mdash; {{item.gsx$horainicio.$t}} - {{item.gsx$horafim.$t}}
+            <span *ngIf='item.gsx$local.$t != ""'>
+            &mdash; {{item.gsx$local.$t}}</span>
+          </p>
         </button>
       </ion-item-sliding>
     </ion-item-group>

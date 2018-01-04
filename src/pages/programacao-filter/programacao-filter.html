@@ -1,0 +1,40 @@
+<!--
+  Generated template for the ProgramacaoFilterPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">Cancelar</button>
+    </ion-buttons>
+
+    <ion-title>
+      Filtrar Programação
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button (click)="applyFilters()" strong>OK</button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="outer-content">
+  <ion-list>
+    <ion-item>
+      <ion-label>Data</ion-label>
+      <ion-select interface="popover" [(ngModel)]="selectedData">
+        <ion-option selected>{{selectDefault}}</ion-option>
+        <ion-option *ngFor="let data of datas">{{data}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Local</ion-label>
+      <ion-select interface="popover" [(ngModel)]="selectedLocal">
+        <ion-option selected>{{selectDefault}}</ion-option>
+        <ion-option *ngFor="let local of locais">{{local}}</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+</ion-content>

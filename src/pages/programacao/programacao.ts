@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { SheetProvider } from '../../providers/sheet/sheet';
 import { DetalhePage } from './../detalhe/detalhe';
+import { ModalController } from 'ionic-angular';
+import { ProgramacaoFilterPage } from './../programacao-filter/programacao-filter';
 
 /**
  * Generated class for the ProgramacaoPage page.
@@ -23,7 +25,7 @@ export class ProgramacaoPage {
   selectedData: string;
   selectedLocal: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private sheetProvider: SheetProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sheetProvider: SheetProvider, public modalCtrl: ModalController) {
   }
 
   ngOnInit(){
@@ -57,7 +59,9 @@ export class ProgramacaoPage {
     let search = ev.target.value;
     if(search && search.trim() != ''){
       this.listaProgramacao = this.listaProgramacao.filter((item) => {
-        return(item.gsx$nome.$t.toLowerCase().indexOf(search.toLowerCase()) > -1);
+        return(item.gsx$nome.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 
+        || item.gsx$palestrantesautores.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 
+        || item.gsx$local.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 );
       })
     }
   }
@@ -92,10 +96,21 @@ export class ProgramacaoPage {
   }
 
   showFilter(){
+    console.log('showFilter');
+    let modal = this.modalCtrl.create(ProgramacaoFilterPage, {datas: this.selectDataOptions, locais: this.selectLocalOptions, default: 'Todos'});
+    console.log(modal);
+    modal.present();
 
+    modal.onWillDismiss((data: any) => {
+      if (data) {
+        this.selectedData = data.data;
+        this.selectedLocal = data.local;
+        this.filterProgramacao();
+      }
+    });
   }
 
-  filterProgramacao(ev: any){
+  filterProgramacao(){
     console.log('Data:' + this.selectedData + ' - Local: ' + this.selectedLocal);   
     this.listaProgramacao = this.listaBkp;
     if(this.selectedData != 'Todos'){
