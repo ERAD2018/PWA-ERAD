@@ -6,7 +6,7 @@
 -->
 <ion-header>
   <ion-navbar color="primary">
-    <!--ion-title>Programação</ion-title-->
+    <!--ion-title>ERAD</ion-title-->
     <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
     <ion-buttons end>
       <button ion-button icon-only (click)="showFilter()">
@@ -18,16 +18,17 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item-group>
-      <ion-item-sliding>
-        <button ion-item *ngFor="let item of listaProgramacao" (click)="goToDetalhes(item)">
+    <ion-item-group *ngFor="let data of selectDataOptions">
+      <ion-item-divider color="light">{{data}}</ion-item-divider>
+      <ng-container *ngFor="let item of listaProgramacao">
+        <button ion-item *ngIf="item.gsx$data.$t == data" (click)="goToDetalhes(item)">
           <h3>{{item.gsx$nome.$t}}</h3>
           <p>{{item.gsx$data.$t}} &mdash; {{item.gsx$horainicio.$t}} - {{item.gsx$horafim.$t}}
             <span *ngIf='item.gsx$local.$t != ""'>
             &mdash; {{item.gsx$local.$t}}</span>
           </p>
         </button>
-      </ion-item-sliding>
+      </ng-container>
     </ion-item-group>
   </ion-list>
 </ion-content>
