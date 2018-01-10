@@ -38,11 +38,40 @@ export class ProgramacaoPage {
   }
 
   getProgramacao(){
+    this.listaProgramacao = [];
     this.sheetProvider.getProgramacao()
     .subscribe(data => {
       console.log(data);
-      var dataResponse = <SheetResponse>data;
-      this.listaProgramacao = dataResponse.feed['entry'];
+      let dataResponse = <SheetResponse>data;
+      let entrys = dataResponse.feed['entry'];
+      for (let index = 0; index < entrys.length;) {
+        const element = entrys[index];
+        let itemProgramacao = <ItemProgramacao>{};
+        itemProgramacao.nome = element.gsx$nome.$t;
+        itemProgramacao.data = element.gsx$data.$t;
+        itemProgramacao.horaInicio = element.gsx$horainicio.$t;
+        itemProgramacao.horaFim = element.gsx$horafim.$t;
+        itemProgramacao.local = element.gsx$local.$t;
+        itemProgramacao.descricoes = [];
+        console.log(element);
+        let descricaoElement = element;
+        console.log(descricaoElement);
+        while(descricaoElement.gsx$id.$t == element.gsx$id.$t){
+          itemProgramacao.descricoes.push({
+            descricao: descricaoElement.gsx$descricao.$t,
+            autor: descricaoElement.gsx$palestrantesautores.$t,
+            arquivo: descricaoElement.gsx$arquivo.$t
+          }); 
+          index++;
+          if(entrys[index] != null){
+            descricaoElement = entrys[index];
+          }else{
+            break;
+          }
+          
+        }
+        this.listaProgramacao.push(itemProgramacao);
+      }
       this.listaBkp = this.listaProgramacao;
       this.setDataSelect();
       this.setLocalSelect();
@@ -59,9 +88,9 @@ export class ProgramacaoPage {
     let search = ev.target.value;
     if(search && search.trim() != ''){
       this.listaProgramacao = this.listaProgramacao.filter((item) => {
-        return(item.gsx$nome.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 
-        || item.gsx$palestrantesautores.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 
-        || item.gsx$local.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 );
+        return(item.nome.toLowerCase().indexOf(search.toLowerCase()) > -1 
+        //|| item.gsx$palestrantesautores.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 
+        || item.local.toLowerCase().indexOf(search.toLowerCase()) > -1 );
       })
     }
   }
@@ -74,9 +103,9 @@ export class ProgramacaoPage {
   setDataSelect(){
     this.selectDataOptions = [];
     this.listaProgramacao.forEach(element => {
-      if(this.selectDataOptions.indexOf(element.gsx$data.$t) == -1){
-        console.log(element.gsx$data.$t);
-        this.selectDataOptions.push(element.gsx$data.$t);
+      if(this.selectDataOptions.indexOf(element.data) == -1){
+        console.log(element.data);
+        this.selectDataOptions.push(element.data);
       }
     });
     this.selectedData = 'Todos';
@@ -86,9 +115,9 @@ export class ProgramacaoPage {
   setLocalSelect(){
     this.selectLocalOptions = [];
     this.listaProgramacao.forEach(element => {
-      if(this.selectLocalOptions.indexOf(element.gsx$local.$t) == -1 && element.gsx$local.$t != ''){
-        console.log(element.gsx$local.$t);
-        this.selectLocalOptions.push(element.gsx$local.$t);
+      if(this.selectLocalOptions.indexOf(element.local) == -1 && element.local != ''){
+        console.log(element.local);
+        this.selectLocalOptions.push(element.local);
       }
     });
     this.selectedLocal = 'Todos';
@@ -115,12 +144,12 @@ export class ProgramacaoPage {
     this.listaProgramacao = this.listaBkp;
     if(this.selectedData != 'Todos'){
       this.listaProgramacao = this.listaProgramacao.filter((item) => {
-        return(item.gsx$data.$t.toLowerCase().indexOf(this.selectedData.toLowerCase()) > -1);
+        return(item.data.toLowerCase().indexOf(this.selectedData.toLowerCase()) > -1);
       })
     }
     if(this.selectedLocal != 'Todos'){
       this.listaProgramacao = this.listaProgramacao.filter((item) => {
-        return(item.gsx$local.$t.toLowerCase().indexOf(this.selectedLocal.toLowerCase()) > -1);
+        return(item.local.toLowerCase().indexOf(this.selectedLocal.toLowerCase()) > -1);
       })
     }
   }
@@ -131,4 +160,14 @@ export class ProgramacaoPage {
 
 interface SheetResponse {
   feed: Object;
+}
+
+interface ItemProgramacao{
+  id: number,
+  nome: string,
+  descricoes: Array<{descricao: string, autor: string, arquivo: string}>,
+  data: string,
+  horaInicio: string,
+  horaFim: string,
+  local: string
 }

@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>{{detalhes.gsx$nome.$t}}</ion-title>
+    <ion-title>{{detalhes.nome}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,11 +15,15 @@
 
 <ion-content padding>
   <div>
-    <h1>{{detalhes.gsx$nome.$t}}</h1>
-    <h4>Local: {{detalhes.gsx$local.$t}}</h4>
-    <h4>Horário: {{detalhes.gsx$horainicio.$t}} - {{detalhes.gsx$horafim.$t}}</h4>
-    <h4 *ngIf='detalhes.gsx$palestrantesautores.$t != ""'>Palestrante: {{detalhes.gsx$palestrantesautores.$t}}</h4>
-    <h4>{{detalhes.gsx$descricao.$t}}</h4>
-    <h4 *ngIf='detalhes.gsx$arquivo.$t != ""'>Anexo: {{detalhes.gsx$arquivo.$t}}</h4>
+    <h1>{{detalhes.nome}}</h1>
+    <p>Local: {{detalhes.local}}</p>
+    <p>Horário: {{detalhes.horaInicio}} - {{detalhes.horaFim}}</p>
+    <div *ngFor='let descricao of detalhes.descricoes'>
+      <p>
+        <span>{{descricao.descricao}}</span>
+        <br/><span *ngIf='descricao.autor != ""'>Autores: {{descricao.autor}}</span>
+        <br/><span *ngIf='descricao.arquivo != ""'>Anexo: {{descricao.arquivo}}</span>
+      </p>
+    </div>
   </div>
 </ion-content>

@@ -21,11 +21,11 @@
     <ion-item-group *ngFor="let data of selectDataOptions">
       <ion-item-divider color="light">{{data}}</ion-item-divider>
       <ng-container *ngFor="let item of listaProgramacao">
-        <button ion-item *ngIf="item.gsx$data.$t == data" (click)="goToDetalhes(item)">
-          <h3>{{item.gsx$nome.$t}}</h3>
-          <p>{{item.gsx$data.$t}} &mdash; {{item.gsx$horainicio.$t}} - {{item.gsx$horafim.$t}}
-            <span *ngIf='item.gsx$local.$t != ""'>
-            &mdash; {{item.gsx$local.$t}}</span>
+        <button ion-item *ngIf="item.data == data" (click)="goToDetalhes(item)">
+          <h3>{{item.nome}}</h3>
+          <p>{{item.data}} &mdash; {{item.horaInicio}} - {{item.horaFim}}
+            <span *ngIf='item.local != ""'>
+            &mdash; {{item.local}}</span>
           </p>
         </button>
       </ng-container>
