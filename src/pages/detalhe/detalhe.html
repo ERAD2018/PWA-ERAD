@@ -16,14 +16,24 @@
 <ion-content padding>
   <div>
     <h1>{{detalhes.nome}}</h1>
-    <p>Local: {{detalhes.local}}</p>
-    <p>Horário: {{detalhes.horaInicio}} - {{detalhes.horaFim}}</p>
-    <div *ngFor='let descricao of detalhes.descricoes'>
-      <p>
-        <span>{{descricao.descricao}}</span>
-        <br/><span *ngIf='descricao.autor != ""'>Autores: {{descricao.autor}}</span>
-        <br/><span *ngIf='descricao.arquivo != ""'>Anexo: {{descricao.arquivo}}</span>
-      </p>
-    </div>
+    <h4>Local: {{detalhes.local}}</h4>
+    <h4>Horário: {{detalhes.horaInicio}} - {{detalhes.horaFim}}</h4>
+    <ion-card *ngFor='let descricao of detalhes.descricoes'>
+      <ion-card-content>
+        <span>
+          <b>{{descricao.descricao}}</b>
+        </span>
+        <div *ngIf='descricao.autor != ""'>
+          <ion-icon name="people"></ion-icon>
+          <b>Autores:</b> {{descricao.autor}}
+        </div>
+      </ion-card-content>
+      <ion-item *ngIf='descricao.arquivo != ""'>
+        <a button ion-button icon-left clear small item-right (click)="openFile(descricao.arquivo)">
+          <ion-icon name="document"></ion-icon>
+          <div>Anexo</div>
+        </a>
+      </ion-item>
+    </ion-card>
   </div>
 </ion-content>

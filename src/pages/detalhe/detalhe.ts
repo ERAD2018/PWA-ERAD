@@ -25,6 +25,10 @@ export class DetalhePage {
     console.log('ionViewDidLoad DetalhePage');
   }
 
+  openFile(url: string){
+    window.open(url);
+  }
+
  /* ionViewWillEnter(){
     console.log(this.navParams.data.detalhes);
     this.detalhes = this.navParams.data.detalhes;
