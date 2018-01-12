@@ -4,6 +4,7 @@ import { SheetProvider } from '../../providers/sheet/sheet';
 import { DetalhePage } from './../detalhe/detalhe';
 import { ModalController } from 'ionic-angular';
 import { ProgramacaoFilterPage } from './../programacao-filter/programacao-filter';
+import { LoadingController } from 'ionic-angular';
 
 /**
  * Generated class for the ProgramacaoPage page.
@@ -25,7 +26,7 @@ export class ProgramacaoPage {
   selectedData: string;
   selectedLocal: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private sheetProvider: SheetProvider, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sheetProvider: SheetProvider, public modalCtrl: ModalController, public loadingCtrl: LoadingController) {
   }
 
   ngOnInit() {
@@ -38,6 +39,11 @@ export class ProgramacaoPage {
   }
 
   getProgramacao() {
+    let loader = this.loadingCtrl.create({
+      content: "Carregando...",
+      duration: 3000
+    });
+    loader.present();
     this.listaProgramacao = [];
     this.sheetProvider.getProgramacao()
       .subscribe(data => {
@@ -77,6 +83,7 @@ export class ProgramacaoPage {
         this.listaBkp = this.listaProgramacao;
         this.setDataSelect();
         this.setLocalSelect();
+        loader.dismiss();
       },
       err => {
         console.log("Erro.");
