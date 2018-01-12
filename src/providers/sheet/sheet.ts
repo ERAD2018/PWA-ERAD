@@ -16,7 +16,6 @@ export class SheetProvider {
   }
 
   getProgramacao(){
-    //this.http.get<SheetResponse>(this.sheetURL).subscribe(data => {return data.feed});
     return this.http.get(this.sheetURL);
   }
 

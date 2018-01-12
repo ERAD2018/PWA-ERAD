@@ -47,7 +47,6 @@ export class ProgramacaoPage {
     this.listaProgramacao = [];
     this.sheetProvider.getProgramacao()
       .subscribe(data => {
-        console.log(data);
         let dataResponse = <SheetResponse>data;
         let entrys = dataResponse.feed['entry'];
         for (let index = 0; index < entrys.length;) {
@@ -59,9 +58,7 @@ export class ProgramacaoPage {
           itemProgramacao.horaFim = element.gsx$horafim.$t;
           itemProgramacao.local = element.gsx$local.$t;
           itemProgramacao.descricoes = [];
-          console.log(element);
           let descricaoElement = element;
-          console.log(descricaoElement);
           while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
             if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '') {
               itemProgramacao.descricoes.push({
@@ -105,7 +102,6 @@ export class ProgramacaoPage {
   }
 
   goToDetalhes(item: any) {
-    console.log(item);
     this.navCtrl.push(DetalhePage, { detalhes: item });
   }
 
@@ -113,30 +109,24 @@ export class ProgramacaoPage {
     this.selectDataOptions = [];
     this.listaProgramacao.forEach(element => {
       if (this.selectDataOptions.indexOf(element.data) == -1) {
-        console.log(element.data);
         this.selectDataOptions.push(element.data);
       }
     });
     this.selectedData = 'Todos';
-    console.log(this.selectDataOptions);
   }
 
   setLocalSelect() {
     this.selectLocalOptions = [];
     this.listaProgramacao.forEach(element => {
       if (this.selectLocalOptions.indexOf(element.local) == -1 && element.local != '') {
-        console.log(element.local);
         this.selectLocalOptions.push(element.local);
       }
     });
     this.selectedLocal = 'Todos';
-    console.log(this.selectLocalOptions);
   }
 
   showFilter() {
-    console.log('showFilter');
     let modal = this.modalCtrl.create(ProgramacaoFilterPage, { datas: this.selectDataOptions, locais: this.selectLocalOptions, default: 'Todos' });
-    console.log(modal);
     modal.present();
 
     modal.onWillDismiss((data: any) => {
@@ -149,7 +139,6 @@ export class ProgramacaoPage {
   }
 
   filterProgramacao() {
-    console.log('Data:' + this.selectedData + ' - Local: ' + this.selectedLocal);
     this.listaProgramacao = this.listaBkp;
     if (this.selectedData != 'Todos') {
       this.listaProgramacao = this.listaProgramacao.filter((item) => {

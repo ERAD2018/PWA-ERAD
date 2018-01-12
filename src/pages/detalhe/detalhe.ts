@@ -17,7 +17,6 @@ export class DetalhePage {
   detalhes:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    console.log(this.navParams.data.detalhes);
     this.detalhes = this.navParams.data.detalhes;
   }
 
@@ -28,10 +27,4 @@ export class DetalhePage {
   openFile(url: string){
     window.open(url);
   }
-
- /* ionViewWillEnter(){
-    console.log(this.navParams.data.detalhes);
-    this.detalhes = this.navParams.data.detalhes;
-  }*/
-
 }
