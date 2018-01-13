@@ -24,6 +24,10 @@ export class DetalhePage {
     console.log('ionViewDidLoad DetalhePage');
   }
 
+  goBack(){
+    this.navCtrl.pop();
+  }
+
   openFile(url: string){
     window.open(url);
   }
