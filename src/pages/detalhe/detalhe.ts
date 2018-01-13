@@ -25,7 +25,9 @@ export class DetalhePage {
   }
 
   goBack(){
-    this.navCtrl.pop();
+    if (this.navCtrl.canGoBack()){
+      this.navCtrl.pop();
+    }
   }
 
   openFile(url: string){
