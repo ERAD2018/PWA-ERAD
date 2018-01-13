@@ -38,6 +38,11 @@ export class ProgramacaoPage {
     console.log('ionViewDidLoad ProgramacaoPage');
   }
 
+  doRefresh(refresher){
+    this.getProgramacao();
+    refresher.complete();
+  }
+
   getProgramacao() {
     let loader = this.loadingCtrl.create({
       content: "Carregando...",

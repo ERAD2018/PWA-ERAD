@@ -17,6 +17,9 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-list>
     <ion-item-group *ngFor="let data of selectDataOptions">
       <ion-item-divider color="light">{{data}}</ion-item-divider>
@@ -25,7 +28,7 @@
           <h3>{{item.nome}}</h3>
           <p>{{item.data}} &mdash; {{item.horaInicio}} - {{item.horaFim}}
             <span *ngIf='item.local != ""'>
-            &mdash; {{item.local}}</span>
+              &mdash; {{item.local}}</span>
           </p>
         </button>
       </ng-container>
