@@ -5,6 +5,7 @@ import { DetalhePage } from './../detalhe/detalhe';
 import { ModalController } from 'ionic-angular';
 import { ProgramacaoFilterPage } from './../programacao-filter/programacao-filter';
 import { LoadingController } from 'ionic-angular';
+import * as moment from 'moment';
 
 /**
  * Generated class for the ProgramacaoPage page.
@@ -25,13 +26,13 @@ export class ProgramacaoPage {
   selectLocalOptions: any;
   selectedData: string;
   selectedLocal: string;
+  segmentDate: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sheetProvider: SheetProvider, public modalCtrl: ModalController, public loadingCtrl: LoadingController) {
   }
 
   ngOnInit() {
     this.getProgramacao();
-
   }
 
   ionViewDidLoad() {
@@ -82,9 +83,11 @@ export class ProgramacaoPage {
           }
           this.listaProgramacao.push(itemProgramacao);
         }
+        this.orderByDate();
         this.listaBkp = this.listaProgramacao;
         this.setDataSelect();
         this.setLocalSelect();
+        this.segmentDate = this.selectDataOptions[0];
         loader.dismiss();
       },
       err => {
@@ -110,6 +113,13 @@ export class ProgramacaoPage {
     this.navCtrl.push(DetalhePage, { detalhes: item });
   }
 
+  orderByDate(){
+    this.listaProgramacao.sort(function(a, b){
+      return moment(a.data+a.horaInicio, "DD/MM/YYYYHH:mm").valueOf() - (moment(b.data+b.horaInicio, "DD/MM/YYYYHH:mm").valueOf());
+    });
+    console.log(this.listaProgramacao);
+  }
+
   setDataSelect() {
     this.selectDataOptions = [];
     this.listaProgramacao.forEach(element => {
@@ -128,6 +138,16 @@ export class ProgramacaoPage {
       }
     });
     this.selectedLocal = 'Todos';
+  }
+
+  getInitialTimes(data:string){
+    let initialTimes = [];
+    this.listaProgramacao.forEach(element => {
+      if (initialTimes.indexOf(element.horaInicio) == -1 && element.data === data) {
+        initialTimes.push(element.horaInicio);
+      }
+    });
+    return initialTimes;
   }
 
   showFilter() {

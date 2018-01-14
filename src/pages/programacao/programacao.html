@@ -20,18 +20,27 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-list>
-    <ion-item-group *ngFor="let data of selectDataOptions">
-      <ion-item-divider color="light">{{data}}</ion-item-divider>
-      <ng-container *ngFor="let item of listaProgramacao">
-        <button ion-item *ngIf="item.data == data" (click)="goToDetalhes(item)">
-          <h3>{{item.nome}}</h3>
-          <p>{{item.data}} &mdash; {{item.horaInicio}} - {{item.horaFim}}
-            <span *ngIf='item.local != ""'>
-              &mdash; {{item.local}}</span>
-          </p>
-        </button>
-      </ng-container>
-    </ion-item-group>
-  </ion-list>
+  <div>
+    <ion-segment *ngIf="selectDataOptions" [(ngModel)]="segmentDate">
+      <ion-segment-button *ngFor="let data of selectDataOptions" value="{{data}}">{{data}}</ion-segment-button>
+    </ion-segment>
+  </div>
+  <div [ngSwitch]="segmentDate">
+    <ng-container *ngFor="let data of selectDataOptions">
+      <ion-list *ngSwitchCase="data">
+        <ion-item-group *ngFor="let initialTime of getInitialTimes(data)">
+          <ion-item-divider color="light">{{initialTime}}</ion-item-divider>
+          <ng-container *ngFor="let item of listaProgramacao">
+            <button ion-item *ngIf="item.data == data && item.horaInicio == initialTime" (click)="goToDetalhes(item)">
+              <h3>{{item.nome}}</h3>
+              <p>{{item.horaInicio}} - {{item.horaFim}}
+                <span *ngIf='item.local != ""'>
+                  &mdash; {{item.local}}</span>
+              </p>
+            </button>
+          </ng-container>
+        </ion-item-group>
+      </ion-list>
+    </ng-container>
+  </div>
 </ion-content>
