@@ -98,15 +98,23 @@ export class ProgramacaoPage {
   }
 
   getItems(ev: any) {
+    console.log("Buscando...");
+    let t0 = performance.now();
     this.listaProgramacao = this.listaBkp;
     let search = ev.target.value;
     if (search && search.trim() != '') {
+      let searchLC = search.toLowerCase();
       this.listaProgramacao = this.listaProgramacao.filter((item) => {
-        return (item.nome.toLowerCase().indexOf(search.toLowerCase()) > -1
-          //|| item.gsx$palestrantesautores.$t.toLowerCase().indexOf(search.toLowerCase()) > -1 
-          || item.local.toLowerCase().indexOf(search.toLowerCase()) > -1);
-      })
+        return (item.nome.toLowerCase().indexOf(searchLC) > -1
+          || item.local.toLowerCase().indexOf(searchLC) > -1
+          || item.descricoes.filter((descricao)=> {
+            return descricao.descricao.toLowerCase().indexOf(searchLC) > -1
+              || descricao.autor.toLowerCase().indexOf(searchLC) > -1
+          }).length > 0);
+      });
     }
+    let t1 = performance.now();
+    console.log("A busca levou: " + (t1-t0) + " ms");
   }
 
   goToDetalhes(item: any) {
