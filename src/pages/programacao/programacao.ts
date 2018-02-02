@@ -6,6 +6,7 @@ import { ModalController } from 'ionic-angular';
 import { ProgramacaoFilterPage } from './../programacao-filter/programacao-filter';
 import { LoadingController } from 'ionic-angular';
 import * as moment from 'moment';
+import { NgForage } from "@ngforage/ngforage-ng5";
 
 /**
  * Generated class for the ProgramacaoPage page.
@@ -28,7 +29,12 @@ export class ProgramacaoPage {
   selectedLocal: string;
   segmentDate: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private sheetProvider: SheetProvider, public modalCtrl: ModalController, public loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private sheetProvider: SheetProvider, 
+    private modalCtrl: ModalController, 
+    private loadingCtrl: LoadingController,
+    private ngforage: NgForage) {
   }
 
   ngOnInit() {
@@ -45,6 +51,7 @@ export class ProgramacaoPage {
   }
 
   getProgramacao() {
+    let t0 = performance.now();
     let loader = this.loadingCtrl.create({
       content: "Carregando...",
       duration: 3000
@@ -53,6 +60,7 @@ export class ProgramacaoPage {
     this.listaProgramacao = [];
     this.sheetProvider.getProgramacao()
       .subscribe(data => {
+        
         let dataResponse = <SheetResponse>data;
         let entrys = dataResponse.feed['entry'];
         for (let index = 0; index < entrys.length;) {
@@ -88,11 +96,28 @@ export class ProgramacaoPage {
         this.setDataSelect();
         this.setLocalSelect();
         this.segmentDate = this.selectDataOptions[0];
+        this.setProgramacaoDB(this.listaProgramacao);
         loader.dismiss();
+        let t1 = performance.now();
+        console.log("O processamento da planilha levou: " + (t1-t0) + " ms");
       },
       err => {
-        console.log("Erro.");
-        this.listaProgramacao = [];
+        console.log("Erro. Acesso offline.");
+        this.listaProgramacao = this.getProgramacaoDB();
+        if(this.listaProgramacao === null){
+          this.listaProgramacao = [];
+        }else{
+          this.orderByDate();
+          this.listaBkp = this.listaProgramacao;
+          this.setDataSelect();
+          this.setLocalSelect();
+          this.segmentDate = this.selectDataOptions[0];
+          this.setProgramacaoDB(this.listaProgramacao);
+          loader.dismiss();
+          console.log("Dados carregados da indexedDB");
+          let t1 = performance.now();
+          console.log("O processamento da planilha levou: " + (t1-t0) + " ms");
+        }
       }
       );
   }
@@ -185,7 +210,17 @@ export class ProgramacaoPage {
     }
   }
 
+  async setProgramacaoDB(lista: Array<ItemProgramacao>) {
+    await this.ngforage.setItem('programacao', lista);
+  }
+
+  async getProgramacaoDB(){
+    return await this.ngforage.getItem<Array<ItemProgramacao>>('programacao');
+  }
+
 }
+
+
 
 
 
