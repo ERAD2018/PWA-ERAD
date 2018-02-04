@@ -5,8 +5,6 @@ import { DetalhePage } from './../detalhe/detalhe';
 import { ModalController } from 'ionic-angular';
 import { ProgramacaoFilterPage } from './../programacao-filter/programacao-filter';
 import { LoadingController } from 'ionic-angular';
-import * as moment from 'moment';
-import { NgForage } from "@ngforage/ngforage-ng5";
 
 /**
  * Generated class for the ProgramacaoPage page.
@@ -33,8 +31,7 @@ export class ProgramacaoPage {
     public navParams: NavParams, 
     private sheetProvider: SheetProvider, 
     private modalCtrl: ModalController, 
-    private loadingCtrl: LoadingController,
-    private ngforage: NgForage) {
+    private loadingCtrl: LoadingController) {
   }
 
   ngOnInit() {
@@ -57,84 +54,15 @@ export class ProgramacaoPage {
       duration: 3000
     });
     loader.present();
-    this.listaProgramacao = [];
-    this.sheetProvider.getProgramacao()
-      .subscribe(data => {   
-        let dataResponse = <SheetResponse>data;
-        let updateSheet = dataResponse.feed['updated'].$t;
-        this.getUpdateDB().then(updateDB => {
-          console.log("update planilha: " + updateSheet + " | update db: " + updateDB);
-          if(updateSheet === updateDB){
-            this.loadDataFromDB();   
-          }else{
-            let entry = dataResponse.feed['entry'];
-            this.loadDataFromSheet(entry, updateSheet); 
-          }
-          loader.dismiss();
-          let t1 = performance.now();
-          console.log("O processamento da planilha levou: " + (t1-t0) + " ms");
-        });    
-      },
-      err => {
-        console.log("Erro. Acesso offline.");
-        this.loadDataFromDB();
-        loader.dismiss();
-      }
-      );
-  }
-
-  loadDataFromDB(){
-    console.log("Dados carregados da indexedDB.");
-    this.getProgramacaoDB().then(programacao => {
+    this.sheetProvider.getProgramacao().subscribe(programacao => {
       this.listaProgramacao = programacao;
-      if(this.listaProgramacao === null){
-        this.listaProgramacao = [];
-      }else{
-        this.orderByDate();
-        this.listaBkp = this.listaProgramacao;
-        this.setSelects();
-        this.segmentDate = this.selectDataOptions[0];
-      }
-    });   
-  }
-
-  loadDataFromSheet(entry: any, update: string){
-    console.log("Dados carregados da planilha.");
-    for (let index = 0; index < entry.length;) {
-      const element = entry[index];
-      let itemProgramacao = <ItemProgramacao>{};
-      itemProgramacao.id = element.gsx$id.$t;
-      itemProgramacao.nome = element.gsx$nome.$t;
-      itemProgramacao.data = element.gsx$data.$t;
-      itemProgramacao.horaInicio = element.gsx$horainicio.$t;
-      itemProgramacao.horaFim = element.gsx$horafim.$t;
-      itemProgramacao.local = element.gsx$local.$t;
-      itemProgramacao.descricoes = [];
-      let descricaoElement = element;
-      while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
-        if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '') {
-          itemProgramacao.descricoes.push({
-            descricao: descricaoElement.gsx$descricao.$t,
-            autor: descricaoElement.gsx$palestrantesautores.$t,
-            arquivo: descricaoElement.gsx$arquivo.$t
-          });
-        }
-        index++;
-        if (entry[index] != null) {
-          descricaoElement = entry[index];
-        } else {
-          break;
-        }
-
-      }
-      this.listaProgramacao.push(itemProgramacao);
-    }
-    this.orderByDate();
-    this.listaBkp = this.listaProgramacao;
-    this.setSelects();
-    this.segmentDate = this.selectDataOptions[0];
-    this.setProgramacaoDB(this.listaProgramacao);
-    this.setUpdateDB(update);
+      this.listaBkp = this.listaProgramacao;
+      this.setSelects();
+      this.segmentDate = this.selectDataOptions[0];
+      loader.dismiss();
+      let t1 = performance.now();
+      console.log("Tempo total de carregamento: " + (t1-t0) + " ms");
+    });
   }
 
   getItems(ev: any) {
@@ -159,12 +87,6 @@ export class ProgramacaoPage {
 
   goToDetalhes(item: any) {
     this.navCtrl.push(DetalhePage, { detalhes: item });
-  }
-
-  orderByDate(){
-    this.listaProgramacao.sort(function(a, b){
-      return moment(a.data+a.horaInicio, "DD/MM/YYYYHH:mm").valueOf() - (moment(b.data+b.horaInicio, "DD/MM/YYYYHH:mm").valueOf());
-    });
   }
 
   setSelects() {
@@ -219,36 +141,5 @@ export class ProgramacaoPage {
     }
   }
 
-  async setProgramacaoDB(lista: Array<ItemProgramacao>) {
-    await this.ngforage.setItem('programacao', lista);
-  }
 
-  async getProgramacaoDB(){
-    let programacao = await this.ngforage.getItem<Array<ItemProgramacao>>('programacao');
-    return programacao;
-  }
-
-  async setUpdateDB(update: string){
-    await this.ngforage.setItem('update', update);
-  }
-
-  async getUpdateDB(){
-    let update = await this.ngforage.getItem<string>('update');
-    return update;
-  }
-
-}
-
-interface SheetResponse {
-  feed: Object;
-}
-
-interface ItemProgramacao {
-  id: string,
-  nome: string,
-  descricoes: Array<{ descricao: string, autor: string, arquivo: string }>,
-  data: string,
-  horaInicio: string,
-  horaFim: string,
-  local: string
 }
