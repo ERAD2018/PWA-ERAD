@@ -59,67 +59,82 @@ export class ProgramacaoPage {
     loader.present();
     this.listaProgramacao = [];
     this.sheetProvider.getProgramacao()
-      .subscribe(data => {
-        
+      .subscribe(data => {   
         let dataResponse = <SheetResponse>data;
-        let entrys = dataResponse.feed['entry'];
-        for (let index = 0; index < entrys.length;) {
-          const element = entrys[index];
-          let itemProgramacao = <ItemProgramacao>{};
-          itemProgramacao.nome = element.gsx$nome.$t;
-          itemProgramacao.data = element.gsx$data.$t;
-          itemProgramacao.horaInicio = element.gsx$horainicio.$t;
-          itemProgramacao.horaFim = element.gsx$horafim.$t;
-          itemProgramacao.local = element.gsx$local.$t;
-          itemProgramacao.descricoes = [];
-          let descricaoElement = element;
-          while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
-            if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '') {
-              itemProgramacao.descricoes.push({
-                descricao: descricaoElement.gsx$descricao.$t,
-                autor: descricaoElement.gsx$palestrantesautores.$t,
-                arquivo: descricaoElement.gsx$arquivo.$t
-              });
-            }
-            index++;
-            if (entrys[index] != null) {
-              descricaoElement = entrys[index];
-            } else {
-              break;
-            }
-
+        let updateSheet = dataResponse.feed['updated'].$t;
+        this.getUpdateDB().then(updateDB => {
+          console.log("update planilha: " + updateSheet + " | update db: " + updateDB);
+          if(updateSheet === updateDB){
+            this.loadDataFromDB();   
+          }else{
+            let entry = dataResponse.feed['entry'];
+            this.loadDataFromSheet(entry, updateSheet); 
           }
-          this.listaProgramacao.push(itemProgramacao);
-        }
-        this.orderByDate();
-        this.listaBkp = this.listaProgramacao;
-        this.setDataSelect();
-        this.setLocalSelect();
-        this.segmentDate = this.selectDataOptions[0];
-        this.setProgramacaoDB(this.listaProgramacao);
-        loader.dismiss();
-        let t1 = performance.now();
-        console.log("O processamento da planilha levou: " + (t1-t0) + " ms");
+          loader.dismiss();
+          let t1 = performance.now();
+          console.log("O processamento da planilha levou: " + (t1-t0) + " ms");
+        });    
       },
       err => {
         console.log("Erro. Acesso offline.");
-        this.listaProgramacao = this.getProgramacaoDB();
-        if(this.listaProgramacao === null){
-          this.listaProgramacao = [];
-        }else{
-          this.orderByDate();
-          this.listaBkp = this.listaProgramacao;
-          this.setDataSelect();
-          this.setLocalSelect();
-          this.segmentDate = this.selectDataOptions[0];
-          this.setProgramacaoDB(this.listaProgramacao);
-          loader.dismiss();
-          console.log("Dados carregados da indexedDB");
-          let t1 = performance.now();
-          console.log("O processamento da planilha levou: " + (t1-t0) + " ms");
-        }
+        this.loadDataFromDB();
+        loader.dismiss();
       }
       );
+  }
+
+  loadDataFromDB(){
+    console.log("Dados carregados da indexedDB.");
+    this.getProgramacaoDB().then(programacao => {
+      this.listaProgramacao = programacao;
+      if(this.listaProgramacao === null){
+        this.listaProgramacao = [];
+      }else{
+        this.orderByDate();
+        this.listaBkp = this.listaProgramacao;
+        this.setSelects();
+        this.segmentDate = this.selectDataOptions[0];
+      }
+    });   
+  }
+
+  loadDataFromSheet(entry: any, update: string){
+    console.log("Dados carregados da planilha.");
+    for (let index = 0; index < entry.length;) {
+      const element = entry[index];
+      let itemProgramacao = <ItemProgramacao>{};
+      itemProgramacao.id = element.gsx$id.$t;
+      itemProgramacao.nome = element.gsx$nome.$t;
+      itemProgramacao.data = element.gsx$data.$t;
+      itemProgramacao.horaInicio = element.gsx$horainicio.$t;
+      itemProgramacao.horaFim = element.gsx$horafim.$t;
+      itemProgramacao.local = element.gsx$local.$t;
+      itemProgramacao.descricoes = [];
+      let descricaoElement = element;
+      while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
+        if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '') {
+          itemProgramacao.descricoes.push({
+            descricao: descricaoElement.gsx$descricao.$t,
+            autor: descricaoElement.gsx$palestrantesautores.$t,
+            arquivo: descricaoElement.gsx$arquivo.$t
+          });
+        }
+        index++;
+        if (entry[index] != null) {
+          descricaoElement = entry[index];
+        } else {
+          break;
+        }
+
+      }
+      this.listaProgramacao.push(itemProgramacao);
+    }
+    this.orderByDate();
+    this.listaBkp = this.listaProgramacao;
+    this.setSelects();
+    this.segmentDate = this.selectDataOptions[0];
+    this.setProgramacaoDB(this.listaProgramacao);
+    this.setUpdateDB(update);
   }
 
   getItems(ev: any) {
@@ -150,26 +165,20 @@ export class ProgramacaoPage {
     this.listaProgramacao.sort(function(a, b){
       return moment(a.data+a.horaInicio, "DD/MM/YYYYHH:mm").valueOf() - (moment(b.data+b.horaInicio, "DD/MM/YYYYHH:mm").valueOf());
     });
-    console.log(this.listaProgramacao);
   }
 
-  setDataSelect() {
+  setSelects() {
     this.selectDataOptions = [];
+    this.selectLocalOptions = [];
     this.listaProgramacao.forEach(element => {
       if (this.selectDataOptions.indexOf(element.data) == -1) {
         this.selectDataOptions.push(element.data);
       }
-    });
-    this.selectedData = 'Todos';
-  }
-
-  setLocalSelect() {
-    this.selectLocalOptions = [];
-    this.listaProgramacao.forEach(element => {
       if (this.selectLocalOptions.indexOf(element.local) == -1 && element.local != '') {
         this.selectLocalOptions.push(element.local);
       }
     });
+    this.selectedData = 'Todos';
     this.selectedLocal = 'Todos';
   }
 
@@ -215,21 +224,27 @@ export class ProgramacaoPage {
   }
 
   async getProgramacaoDB(){
-    return await this.ngforage.getItem<Array<ItemProgramacao>>('programacao');
+    let programacao = await this.ngforage.getItem<Array<ItemProgramacao>>('programacao');
+    return programacao;
+  }
+
+  async setUpdateDB(update: string){
+    await this.ngforage.setItem('update', update);
+  }
+
+  async getUpdateDB(){
+    let update = await this.ngforage.getItem<string>('update');
+    return update;
   }
 
 }
-
-
-
-
 
 interface SheetResponse {
   feed: Object;
 }
 
 interface ItemProgramacao {
-  id: number,
+  id: string,
   nome: string,
   descricoes: Array<{ descricao: string, autor: string, arquivo: string }>,
   data: string,
