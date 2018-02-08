@@ -9,9 +9,11 @@ import { ProgramacaoPage } from './../pages/programacao/programacao';
 import { DetalhePage } from './../pages/detalhe/detalhe';
 import { ProgramacaoFilterPage } from '../pages/programacao-filter/programacao-filter';
 import { LinksPage } from '../pages/links/links';
+import { FavoritosPage } from './../pages/favoritos/favoritos';
 
 import { SheetProvider } from '../providers/sheet/sheet';
 import { HttpClientModule } from '@angular/common/http';
+import { UserDataProvider } from '../providers/user-data/user-data';
 
 //import { StatusBar } from '@ionic-native/status-bar';
 //import { SplashScreen } from '@ionic-native/splash-screen';
@@ -23,7 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
     ProgramacaoPage,
     DetalhePage,
     ProgramacaoFilterPage,
-    LinksPage
+    LinksPage,
+    FavoritosPage
   ],
   imports: [
     BrowserModule,
@@ -38,13 +41,15 @@ import { HttpClientModule } from '@angular/common/http';
     ProgramacaoPage,
     DetalhePage,
     ProgramacaoFilterPage,
-    LinksPage
+    LinksPage,
+    FavoritosPage
   ],
   providers: [
     //StatusBar,
     //SplashScreen,
     SheetProvider,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    UserDataProvider
   ]
 })
 export class AppModule {}

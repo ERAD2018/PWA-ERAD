@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { SheetProvider } from '../../providers/sheet/sheet';
+import { UserDataProvider } from './../../providers/user-data/user-data';
 import { DetalhePage } from './../detalhe/detalhe';
 import { ModalController } from 'ionic-angular';
 import { ProgramacaoFilterPage } from './../programacao-filter/programacao-filter';
@@ -29,9 +30,11 @@ export class ProgramacaoPage {
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
-    private sheetProvider: SheetProvider, 
+    private sheetProvider: SheetProvider,
+    private userProvider: UserDataProvider,
     private modalCtrl: ModalController, 
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController) {
   }
 
   ngOnInit() {
@@ -57,12 +60,14 @@ export class ProgramacaoPage {
     this.sheetProvider.getProgramacao().subscribe(programacao => {
       this.listaProgramacao = programacao;
       this.listaBkp = this.listaProgramacao;
-      this.setSelects();
-      this.segmentDate = this.selectDataOptions[0];
-      loader.dismiss();
+      if(!this.selectDataOptions && this.listaProgramacao.length > 0){
+        this.setSelects();
+        this.segmentDate = this.selectDataOptions[0]; 
+      }  
       let t1 = performance.now();
       console.log("Tempo total de carregamento: " + (t1-t0) + " ms");
     });
+    loader.dismiss();
   }
 
   getItems(ev: any) {
@@ -132,13 +137,31 @@ export class ProgramacaoPage {
     if (this.selectedData != 'Todos') {
       this.listaProgramacao = this.listaProgramacao.filter((item) => {
         return (item.data.toLowerCase().indexOf(this.selectedData.toLowerCase()) > -1);
-      })
+      });
     }
     if (this.selectedLocal != 'Todos') {
       this.listaProgramacao = this.listaProgramacao.filter((item) => {
         return (item.local.toLowerCase().indexOf(this.selectedLocal.toLowerCase()) > -1);
-      })
+      });
     }
+  }
+
+  setFavorite(item: any, event: Event){
+    event.stopPropagation();
+     item.favorito = !item.favorito;
+     let message = "";
+     if(item.favorito){
+       message = "Adicionado aos favoritos.";
+       this.userProvider.setFavorito(item.id);
+     }else{
+       message = "Removido dos favoritos.";
+       this.userProvider.removeFavorito(item.id);
+     }
+     let toast = this.toastCtrl.create({
+       message: message,
+       duration: 1000
+     });
+     toast.present();
   }
 
 

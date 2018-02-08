@@ -37,6 +37,9 @@
                 <span *ngIf='item.local != ""'>
                   &mdash; {{item.local}}</span>
               </p>
+              <button ion-button clear icon-only item-end (click)="setFavorite(item, $event)">
+                <ion-icon [name]="item.favorito ? 'star' : 'star-outline'"></ion-icon>
+              </button>
             </button>
           </ng-container>
         </ion-item-group>

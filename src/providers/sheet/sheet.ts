@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NgForage } from "@ngforage/ngforage-ng5";
 import * as moment from 'moment';
-import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 /*
   Generated class for the SheetProvider provider.
@@ -13,11 +13,13 @@ import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class SheetProvider {
   private sheetURL: string;
-  private listaProgramacao: Subject<Array<ItemProgramacao>>;
+  private programacao: Array<ItemProgramacao>;
+  private listaObs: BehaviorSubject<Array<ItemProgramacao>>;
 
   constructor(public http: HttpClient, private ngforage: NgForage) {
     this.sheetURL = 'https://spreadsheets.google.com/feeds/list/1GaNzOyrRfdY5MIrUSBY4_TnV0oEc3nG-bNwdbzKUJu4/od6/public/values?alt=json';
-    this.listaProgramacao = new Subject();
+    this.listaObs = new BehaviorSubject([]);
+    this.loadProgramacao();
   }
 
   private loadProgramacao(){
@@ -44,10 +46,22 @@ export class SheetProvider {
   private loadDataFromDB(){
     console.log("Dados carregados da indexedDB.");
     this.getProgramacaoDB().then(programacao => {
-      if(programacao === null){
-        this.listaProgramacao.next([]);
+      if(!programacao){
+        this.programacao = [];
+        this.listaObs.next(programacao);
       }else{
-        this.listaProgramacao.next(this.orderByDate(programacao));
+        this.programacao = this.orderByDate(programacao);
+        this.getFavoritosFromDB().then(favoritos => {
+          if(favoritos){
+            this.programacao.forEach(element =>  {
+              if(favoritos.indexOf(element.id) > -1){
+                element.favorito = true;
+              }
+            });
+          }
+          this.listaObs.next(this.programacao);
+        });
+        
       }
     });   
   }
@@ -64,6 +78,7 @@ export class SheetProvider {
       itemProgramacao.horaInicio = element.gsx$horainicio.$t;
       itemProgramacao.horaFim = element.gsx$horafim.$t;
       itemProgramacao.local = element.gsx$local.$t;
+      itemProgramacao.favorito = false;
       itemProgramacao.descricoes = [];
       let descricaoElement = element;
       while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
@@ -84,9 +99,9 @@ export class SheetProvider {
       }
       programacao.push(itemProgramacao);
     }
-    programacao = this.orderByDate(programacao);
-    this.listaProgramacao.next(programacao);
-    this.setProgramacaoDB(programacao);
+    this.programacao = this.orderByDate(programacao);
+    this.listaObs.next(this.programacao);
+    this.setProgramacaoDB(this.programacao);
     this.setUpdateDB(update);
   }
 
@@ -115,9 +130,19 @@ export class SheetProvider {
     return update;
   }
 
+  private async getFavoritosFromDB(){
+    let favoritosIds = await this.ngforage.getItem<Array<string>>('favoritos');
+    return favoritosIds;
+  }
+
   public getProgramacao(){
-    this.loadProgramacao();
-    return this.listaProgramacao.asObservable();
+    //Se os dados já foram carregados na memória retorna a lista já processada
+    /*if(this.programacao != null){
+      this.listaObs.next(this.programacao);
+    }else{ // carrega os dados da planilha ou indexedDB.
+      this.loadProgramacao();
+    }*/
+    return this.listaObs.asObservable();
   }
 
 
@@ -134,5 +159,6 @@ interface ItemProgramacao {
   data: string,
   horaInicio: string,
   horaFim: string,
-  local: string
+  local: string,
+  favorito: boolean
 }
