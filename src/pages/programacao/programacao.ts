@@ -54,7 +54,7 @@ export class ProgramacaoPage {
     let t0 = performance.now();
     let loader = this.loadingCtrl.create({
       content: "Carregando...",
-      duration: 3000
+      duration: 10000
     });
     loader.present();
     this.sheetProvider.getProgramacao().subscribe(programacao => {
@@ -63,11 +63,14 @@ export class ProgramacaoPage {
       if(!this.selectDataOptions && this.listaProgramacao.length > 0){
         this.setSelects();
         this.segmentDate = this.selectDataOptions[0]; 
+        loader.dismiss().catch(() => {});
       }  
       let t1 = performance.now();
-      console.log("Tempo total de carregamento: " + (t1-t0) + " ms");
+      console.log("Tempo total de carregamento: " + (t1-t0) + " ms");    
+    }, error => {
+      console.log(error);
     });
-    loader.dismiss();
+
   }
 
   getItems(ev: any) {
