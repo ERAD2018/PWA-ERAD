@@ -15,8 +15,8 @@
 
 <ion-content padding>
   <ion-list>
-    <div *ngIf="(userDataSub | async)?.length > 0; else empty">
-      <button ion-item *ngFor="let item of userDataSub | async" (click)="goToDetalhes(item)">
+    <div *ngIf="favoritosList?.length > 0; else empty">
+      <button ion-item *ngFor="let item of favoritosList" (click)="goToDetalhes(item)">
           <h3>{{item.nome}}</h3>
           <p>{{item.data}} &mdash; {{item.horaInicio}} - {{item.horaFim}}
             <span *ngIf='item.local != ""'>
