@@ -1,6 +1,6 @@
 import { UserDataProvider } from '../../providers/user-data/user-data';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { DetalhePage } from './../detalhe/detalhe';
 import * as moment from 'moment';
 
@@ -19,7 +19,7 @@ export class FavoritosPage {
 
   public favoritosList: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private userData: UserDataProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private userData: UserDataProvider, private toastCtrl: ToastController) {
   }
 
   ionViewDidLoad() {
@@ -36,6 +36,18 @@ export class FavoritosPage {
 
   goToDetalhes(item: any) {
     this.navCtrl.push(DetalhePage, { detalhes: item });
+  }
+
+  setFavorite(item: any, event: Event){
+    event.stopPropagation();
+    item.favorito = !item.favorito;
+    let message = "Removido dos favoritos.";
+    this.userData.removeFavorito(item.id);
+    let toast = this.toastCtrl.create({
+       message: message,
+       duration: 1000
+     });
+     toast.present();
   }
 
 }

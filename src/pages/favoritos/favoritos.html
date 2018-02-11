@@ -22,6 +22,9 @@
             <span *ngIf='item.local != ""'>
               &mdash; {{item.local}}</span>
           </p>
+          <button ion-button clear icon-only item-end (click)="setFavorite(item, $event)">
+            <ion-icon name="close"></ion-icon>
+          </button>
       </button>
     </div>
     <ng-template #empty>
