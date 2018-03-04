@@ -33,12 +33,12 @@
           <b>Autores:</b> {{descricao.autor}}
         </div>
       </ion-card-content>
-      <ion-item *ngIf='descricao.arquivo != "" || descricao.arquivoHTML != ""'>
-        <a button ion-button icon-left clear small item-right *ngIf='descricao.arquivo != ""' (click)="openFile(descricao.arquivo)">
+      <ion-item *ngIf='(descricao.arquivo && descricao.arquivo != "") || (descricao.arquivoHTML && descricao.arquivoHTML != "")'>
+        <a button ion-button icon-left clear small item-right *ngIf='descricao.arquivo && descricao.arquivo != ""' (click)="openFile(descricao.arquivo)">
           <ion-icon name="document"></ion-icon>
           <div>PDF</div>
         </a>
-        <a button ion-button icon-left clear small item-right *ngIf='descricao.arquivoHTML != ""' (click)="openFile(descricao.arquivoHTML)">
+        <a button ion-button icon-left clear small item-right *ngIf='descricao.arquivoHTML && descricao.arquivoHTML != ""' (click)="openFile(descricao.arquivoHTML)">
           <ion-icon name="document"></ion-icon>
           <div>HTML</div>
         </a>
