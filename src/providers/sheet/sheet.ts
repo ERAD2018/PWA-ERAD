@@ -82,7 +82,7 @@ export class SheetProvider {
       itemProgramacao.descricoes = [];
       let descricaoElement = element;
       while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
-        if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '' || descricaoElement.gsx$arquivohtml != '') {
+        if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '' || descricaoElement.gsx$arquivohtml.$t != '') {
           itemProgramacao.descricoes.push({
             descricao: descricaoElement.gsx$descricao.$t,
             autor: descricaoElement.gsx$palestrantesautores.$t,
