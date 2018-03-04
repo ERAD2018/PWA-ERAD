@@ -82,11 +82,12 @@ export class SheetProvider {
       itemProgramacao.descricoes = [];
       let descricaoElement = element;
       while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
-        if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '') {
+        if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '' || descricaoElement.gsx$arquivohtml != '') {
           itemProgramacao.descricoes.push({
             descricao: descricaoElement.gsx$descricao.$t,
             autor: descricaoElement.gsx$palestrantesautores.$t,
-            arquivo: descricaoElement.gsx$arquivo.$t
+            arquivo: descricaoElement.gsx$arquivo.$t,
+            arquivoHTML: descricaoElement.gsx$arquivohtml.$t
           });
         }
         index++;
@@ -155,7 +156,7 @@ interface SheetResponse {
 interface ItemProgramacao {
   id: string,
   nome: string,
-  descricoes: Array<{ descricao: string, autor: string, arquivo: string }>,
+  descricoes: Array<{ descricao: string, autor: string, arquivo: string, arquivoHTML: string }>,
   data: string,
   horaInicio: string,
   horaFim: string,
