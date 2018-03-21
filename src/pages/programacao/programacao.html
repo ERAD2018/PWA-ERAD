@@ -32,7 +32,7 @@
           <ion-item-divider color="light">{{initialTime}}</ion-item-divider>
           <ng-container *ngFor="let item of listaProgramacao">
             <button ion-item *ngIf="item.data == data && item.horaInicio == initialTime" (click)="goToDetalhes(item)">
-              <h3>{{item.nome}}</h3>
+              <h2>{{item.nome}}</h2>
               <p>{{item.horaInicio}} - {{item.horaFim}}
                 <span *ngIf='item.local != ""'>
                   &mdash; {{item.local}}</span>
