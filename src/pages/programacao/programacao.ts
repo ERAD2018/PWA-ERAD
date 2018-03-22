@@ -46,7 +46,7 @@ export class ProgramacaoPage {
   }
 
   doRefresh(refresher){
-    this.getProgramacao();
+    this.sheetProvider.loadProgramacao();
     refresher.complete();
   }
 

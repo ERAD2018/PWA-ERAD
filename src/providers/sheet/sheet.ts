@@ -22,7 +22,7 @@ export class SheetProvider {
     this.loadProgramacao();
   }
 
-  private loadProgramacao(){
+  public loadProgramacao(){
     this.http.get(this.sheetURL).subscribe(data => {   
       let dataResponse = <SheetResponse>data;
       let updateSheet = dataResponse.feed['updated'].$t;
