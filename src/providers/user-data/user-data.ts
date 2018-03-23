@@ -87,6 +87,7 @@ export class UserDataProvider {
 interface ItemProgramacao {
   id: string,
   nome: string,
+  chair: string,
   descricoes: Array<{ descricao: string, autor: string, arquivo: string, arquivoHTML: string }>,
   data: string,
   horaInicio: string,

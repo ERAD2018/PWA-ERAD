@@ -23,6 +23,7 @@
     <h1>{{detalhes.nome}}</h1>
     <h4>Local: {{detalhes.local}}</h4>
     <h4>Horário: {{detalhes.horaInicio}} - {{detalhes.horaFim}}</h4>
+    <h4 *ngIf="detalhes.chair && detalhes.chair !== ''">Chair: {{detalhes.chair}}</h4>
     <ion-card *ngFor='let descricao of detalhes.descricoes'>
       <ion-card-content>
         <span>

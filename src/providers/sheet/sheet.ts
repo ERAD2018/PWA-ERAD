@@ -74,6 +74,7 @@ export class SheetProvider {
       let itemProgramacao = <ItemProgramacao>{};
       itemProgramacao.id = element.gsx$id.$t;
       itemProgramacao.nome = element.gsx$nome.$t;
+      itemProgramacao.chair = element.gsx$chair.$t
       itemProgramacao.data = element.gsx$data.$t;
       itemProgramacao.horaInicio = element.gsx$horainicio.$t;
       itemProgramacao.horaFim = element.gsx$horafim.$t;
@@ -156,6 +157,7 @@ interface SheetResponse {
 interface ItemProgramacao {
   id: string,
   nome: string,
+  chair: string,
   descricoes: Array<{ descricao: string, autor: string, arquivo: string, arquivoHTML: string }>,
   data: string,
   horaInicio: string,
