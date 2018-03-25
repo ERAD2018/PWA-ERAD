@@ -83,6 +83,9 @@ export class SheetProvider {
       itemProgramacao.descricoes = [];
       let descricaoElement = element;
       while (descricaoElement.gsx$id.$t == element.gsx$id.$t) {
+        if(descricaoElement.gsx$horafim.$t != '' && (moment(descricaoElement.gsx$horafim.$t, "HH:mm").valueOf() > moment(element.gsx$horafim.$t, "HH:mm").valueOf())){
+          itemProgramacao.horaFim = descricaoElement.gsx$horafim.$t;
+        }
         if (descricaoElement.gsx$descricao.$t != '' || descricaoElement.gsx$palestrantesautores.$t != '' || descricaoElement.gsx$arquivo.$t != '' || descricaoElement.gsx$arquivohtml.$t != '') {
           itemProgramacao.descricoes.push({
             descricao: descricaoElement.gsx$descricao.$t,
