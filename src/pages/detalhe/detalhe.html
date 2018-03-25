@@ -9,6 +9,9 @@
   <ion-navbar color="primary" hideBackButton="true">
     <ion-title>{{detalhes.nome}}</ion-title>
     <ion-buttons end>
+      <button ion-button icon-only (click)="setFavorite(detalhes)">
+        <ion-icon [name]="detalhes.favorito ? 'star' : 'star-outline'"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="goBack()">
         <ion-icon name="close"></ion-icon>
       </button>
@@ -20,7 +23,7 @@
 
 <ion-content padding>
   <div>
-    <h1>{{detalhes.nome}}</h1>
+    <h3>{{detalhes.nome}}</h3>  
     <h4>Local: {{detalhes.local}}</h4>
     <h4>Horário: {{detalhes.horaInicio}} - {{detalhes.horaFim}}</h4>
     <h4 *ngIf="detalhes.chair && detalhes.chair !== ''">Chair: {{detalhes.chair}}</h4>
