@@ -89,6 +89,7 @@ export class ProgramacaoPage {
           }).length > 0);
       });
     }
+    this.segmentDate = "Todos";
     let t1 = performance.now();
     console.log("A busca levou: " + (t1-t0) + " ms");
   }
@@ -165,6 +166,16 @@ export class ProgramacaoPage {
        duration: 1000
      });
      toast.present();
+  }
+
+  getDates(){
+    let dateList = [];
+    this.listaProgramacao.forEach(element => {
+      if (dateList.indexOf(element.data) == -1) {
+        dateList.push(element.data);
+      }
+    });
+    return dateList;
   }
 
 

@@ -22,10 +22,28 @@
   </ion-refresher>
   <div>
     <ion-segment *ngIf="selectDataOptions" [(ngModel)]="segmentDate">
+      <ion-segment-button value="Todos">Todos</ion-segment-button>
       <ion-segment-button *ngFor="let data of selectDataOptions" value="{{data}}">{{data}}</ion-segment-button>
     </ion-segment>
   </div>
   <div [ngSwitch]="segmentDate">
+    <ion-list *ngSwitchCase="'Todos'">
+      <ion-item-group *ngFor="let date of getDates()">
+        <ion-item-divider color="light">{{date}}</ion-item-divider>
+        <ng-container *ngFor="let item of listaProgramacao">
+          <button ion-item *ngIf="item.data == date" (click)="goToDetalhes(item)">
+            <h2>{{item.nome}}</h2>
+            <p>{{item.data}} &mdash; {{item.horaInicio}} - {{item.horaFim}}
+              <span *ngIf='item.local != ""'>
+                &mdash; {{item.local}}</span>
+            </p>
+            <button ion-button clear icon-only item-end (click)="setFavorite(item, $event)">
+              <ion-icon [name]="item.favorito ? 'star' : 'star-outline'"></ion-icon>
+            </button>
+          </button>
+        </ng-container>
+      </ion-item-group>
+    </ion-list>
     <ng-container *ngFor="let data of selectDataOptions">
       <ion-list *ngSwitchCase="data">
         <ion-item-group *ngFor="let initialTime of getInitialTimes(data)">
