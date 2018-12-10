@@ -20,6 +20,7 @@ export class SheetProvider {
     this.sheetURL = 'https://spreadsheets.google.com/feeds/list/1GaNzOyrRfdY5MIrUSBY4_TnV0oEc3nG-bNwdbzKUJu4/od6/public/values?alt=json';
     this.listaObs = new BehaviorSubject([]);
     this.loadProgramacao();
+    this.ngforage.name = "ERAD";
   }
 
   public loadProgramacao(){

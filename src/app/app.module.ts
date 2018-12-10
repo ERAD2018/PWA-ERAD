@@ -31,7 +31,7 @@ import { UserDataProvider } from '../providers/user-data/user-data';
   imports: [
     BrowserModule,
     HttpClientModule,
-    NgForageModule,
+    NgForageModule.forRoot(),
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],

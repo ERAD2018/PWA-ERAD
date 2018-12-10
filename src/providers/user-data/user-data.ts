@@ -21,6 +21,7 @@ export class UserDataProvider {
     console.log('Hello UserDataProvider Provider');
     this.listaFavoritosObs = new BehaviorSubject([]);
     this.loadFavoritos();
+    this.ngforage.name = "ERAD";
   }
 
   
