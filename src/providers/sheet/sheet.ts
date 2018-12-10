@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NgForage } from "@ngforage/ngforage-ng5";
+import { NgForage } from "ngforage";
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 

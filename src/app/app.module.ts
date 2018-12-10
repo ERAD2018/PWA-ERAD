@@ -2,7 +2,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { NgForageModule } from "@ngforage/ngforage-ng5";
+import { NgForageModule } from "ngforage";
 
 import { TabsPage } from '../pages/tabs/tabs';
 import { ProgramacaoPage } from './../pages/programacao/programacao';
